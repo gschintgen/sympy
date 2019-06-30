@@ -931,6 +931,12 @@ def test_atan():
     assert atan(2 + sqrt(3)) == 5*pi/12
     assert atan(-2 - sqrt(3)) == -5*pi/12
 
+    # check round-trip for exact values:
+    for d in [5, 6, 8, 10, 12]:
+        for num in range(-(d//2), d//2 + 1):
+            if gcd(num, d) == 1:
+                assert atan(tan(num*pi/d)) == num*pi/d
+
     assert atan(oo) == pi/2
     assert atan(x).diff(x) == 1/(1 + x**2)
 
