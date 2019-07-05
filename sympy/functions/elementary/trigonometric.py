@@ -2328,16 +2328,23 @@ class atan(InverseTrigonometricFunction):
                 -1/sqrt(3): -6,
                 sqrt(3): 3,
                 -sqrt(3): -3,
-                (1 + sqrt(2)): S(8)/3,
-                -(1 + sqrt(2)): S(8)/3,
                 (sqrt(2) - 1): 8,
                 (1 - sqrt(2)): -8,
+                (1 + sqrt(2)): S(8)/3,
+                -(1 + sqrt(2)): -S(8)/3,
+                sqrt((5 - 2*sqrt(5))): 5,
+                -sqrt((5 - 2*sqrt(5))): -5,
                 sqrt((5 + 2*sqrt(5))): S(5)/2,
                 -sqrt((5 + 2*sqrt(5))): -S(5)/2,
+                sqrt(1 - 2 * sqrt(5) / 5): 10,
+                -sqrt(1 - 2 * sqrt(5) / 5): -10,
+                sqrt(1 + 2 * sqrt(5) / 5): S(10)/3,
+                -sqrt(1 + 2 * sqrt(5) / 5): -S(10)/3,
                 (2 - sqrt(3)): 12,
-                -(2 - sqrt(3)): -12
+                -(2 - sqrt(3)): -12,
+                (2 + sqrt(3)): S(12)/5,
+                -(2 + sqrt(3)): -S(12)/5
             }
-
             if arg in cst_table:
                 return S.Pi / cst_table[arg]
 
