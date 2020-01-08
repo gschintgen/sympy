@@ -287,11 +287,11 @@ class Set(Basic):
 
     def contains(self, other):
         """
-        Returns a SymPy value indicating whether ``other`` is contained
-        in ``self``: ``true`` if it is, ``false`` if it isn't, else
-        an unevaluated ``Contains`` expression (or, as in the case of
-        ConditionSet and a union of FiniteSet/Intervals, an expression
-        indicating the conditions for containment).
+        Returns a symbolic ``Boolean`` value indicating whether ``other`` is
+        contained in ``self``: ``true`` if it is, ``false`` if it isn't, else
+        an unevaluated ``Contains`` expression or an expression indicating the
+        conditions for membership.  The latter may be returned for ``Ranges``,
+        ``Intervals``, ``ConditionSets`` or unions thereof.
 
         Examples
         ========
@@ -302,9 +302,8 @@ class Set(Basic):
         >>> Interval(0, 1).contains(0.5)
         True
 
-        As a shortcut it is possible to use the 'in' operator, but that
-        will raise an error unless an affirmative true or false is not
-        obtained.
+        As a shortcut it is possible to use the ``in`` operator, but that
+        will raise an error unless an affirmative true or false is obtained.
 
         >>> Interval(0, 1).contains(x)
         (0 <= x) & (x <= 1)
@@ -313,7 +312,7 @@ class Set(Basic):
         ...
         TypeError: did not evaluate to a bool: None
 
-        The result of 'in' is a bool, not a SymPy value
+        The result of ``in`` is a Python ``bool``, not a SymPy ``Boolean``.
 
         >>> 1 in Interval(0, 2)
         True
