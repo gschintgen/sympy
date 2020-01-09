@@ -306,7 +306,7 @@ class Set(Basic):
         will raise an error unless an affirmative true or false is obtained.
 
         >>> Interval(0, 1).contains(x)
-        (0 <= x) & (x <= 1)
+        Contains(x, Interval(0, 1))
         >>> x in Interval(0, 1)
         Traceback (most recent call last):
         ...
@@ -1075,8 +1075,9 @@ class Interval(Set, EvalfMixin):
             if not other.is_real is None:
                 return other.is_real
 
-        d = Dummy()
-        return self.as_relational(d).subs(d, other)
+        if other.is_extended_real is True:
+            d = Dummy()
+            return self.as_relational(d).subs(d, other)
 
     def as_relational(self, x):
         """Rewrite an interval in terms of inequalities and logic operators."""

@@ -813,21 +813,30 @@ def test_contains():
     assert not rootof(x**5 + x**3 + 1, 1) in S.Reals
 
     # non-bool results
+    r = Symbol('r', real=True)
     assert Union(Interval(1, 2), Interval(3, 4)).contains(x) == \
-        Or(And(S.One <= x, x <= 2), And(S(3) <= x, x <= 4))
+        Or(Contains(x, Interval(1, 2)), Contains(x, Interval(3, 4)))
+    assert Union(Interval(1, 2), Interval(3, 4)).contains(r) == \
+        Or(And(S.One <= r, r <= 2), And(S(3) <= r, r <= 4))
+    assert Intersection(Interval(1, x), Interval(2, 3)).contains(r) == \
+        And(r <= 3, r <= x, S.One <= r, S(2) <= r)
     assert Intersection(Interval(1, x), Interval(2, 3)).contains(y) == \
-        And(y <= 3, y <= x, S.One <= y, S(2) <= y)
+        And(Contains(y, Interval(1, x)), Contains(y, Interval(2, 3)))
+    assert Interval(0, 1).contains(x).subs(x, I) is S.false  # issue #18252
 
     assert (S.Complexes).contains(S.ComplexInfinity) == S.false
 
 
 def test_interval_symbolic():
     x = Symbol('x')
+    r = Symbol('r', real=True)
     e = Interval(0, 1)
-    assert e.contains(x) == And(S.Zero <= x, x <= 1)
+    assert e.contains(x) == Contains(x, e)
+    assert e.contains(r) == And(S.Zero <= r, r <= 1)
     raises(TypeError, lambda: x in e)
     e = Interval(0, 1, True, True)
-    assert e.contains(x) == And(S.Zero < x, x < 1)
+    assert e.contains(x) == Contains(x, e)
+    assert e.contains(r) == And(S.Zero < r, r < 1)
     c = Symbol('c', real=False)
     assert Interval(x, x + 1).contains(c) == False
     e = Symbol('e', extended_real=True)
@@ -837,18 +846,21 @@ def test_interval_symbolic():
 
 def test_union_contains():
     x = Symbol('x')
+    r = Symbol('r', real=True)
     i1 = Interval(0, 1)
     i2 = Interval(2, 3)
     i3 = Union(i1, i2)
     assert i3.as_relational(x) == Or(And(S.Zero <= x, x <= 1), And(S(2) <= x, x <= 3))
     raises(TypeError, lambda: x in i3)
-    e = i3.contains(x)
-    assert e == i3.as_relational(x)
-    assert e.subs(x, -0.5) is false
-    assert e.subs(x, 0.5) is true
-    assert e.subs(x, 1.5) is false
-    assert e.subs(x, 2.5) is true
-    assert e.subs(x, 3.5) is false
+    e = i3.contains(r)
+    assert e == i3.as_relational(r)
+    assert e.subs(r, -0.5) is false
+    assert e.subs(r, 0.5) is true
+    assert e.subs(r, 1.5) is false
+    assert e.subs(r, 2.5) is true
+    assert e.subs(r, 3.5) is false
+    f = i3.contains(x)
+    assert f.subs(x, I) is false
 
     U = Interval(0, 2, True, True) + Interval(10, oo) + FiniteSet(-1, 2, 5, 6)
     assert all(el not in U for el in [0, 4, -oo])
